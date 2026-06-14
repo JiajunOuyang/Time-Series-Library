@@ -5,6 +5,8 @@ TSLib is an open-source library for deep learning researchers, especially for de
 
 We provide a neat code base to evaluate advanced deep time series models or develop your model, which covers five mainstream tasks: **long- and short-term forecasting, imputation, anomaly detection, and classification.**
 
+:triangular_flag_on_post:**News** (2026.04) Due to the limited bandwidth of the current maintainers, we will not be actively adding new features to this library. Since the library was originally released three years ago, many of its benchmarks may no longer be meaningful for evaluating the effectiveness or progress of current research. However, the baseline implementations remain correct. We therefore recommend seeking out newer benchmarks.
+
 :triangular_flag_on_post:**News** (2025.12) Many thanks to the great work from [ailuntz](https://github.com/thuml/Time-Series-Library/pull/805), which provides an updated requirements and docker deployment, as well as a well-organized document. This is quite meaningful to this project and beginners.
 
 :triangular_flag_on_post:**News** (2025.11) Considering the rapid development of Large Time Series Models (LTSMs), we have newly added a [[zero-shot forecasting]](https://github.com/thuml/Time-Series-Library/blob/main/exp/exp_zero_shot_forecasting.py) feature in TSLib. You can try [this script](https://github.com/thuml/Time-Series-Library/blob/main/scripts/long_term_forecast/ETT_script/LTSM.sh) to evaluate LTSMs.
@@ -61,6 +63,7 @@ Till March 2024, the top three models for five different tasks are:
 See our latest paper [[TimesNet]](https://arxiv.org/abs/2210.02186) for the comprehensive benchmark. We will release a real-time updated online version soon.
 
 **Newly added baselines.** We will add them to the leaderboard after a comprehensive evaluation.
+  - [x] **MambaSL** - MambaSL: Exploring Single-Layer Mamba for Time Series Classification [[ICLR 2026]](https://openreview.net/forum?id=YDl4vqQqGP) [[Code]](https://github.com/thuml/Time-Series-Library/blob/main/models/MambaSingleLayer.py)
   - [x] **TimeFilter** - TimeFilter: Patch-Specific Spatial-Temporal Graph Filtration for Time Series Forecasting [[ICML 2025]](https://arxiv.org/abs/2501.13041) [[Code]](https://github.com/thuml/Time-Series-Library/blob/main/models/TimeFilter.py)
   - [x] **KAN-AD** - KAN-AD: Time Series Anomaly Detection with Kolmogorov-Arnold Networks [[ICML 2025]](https://arxiv.org/abs/2411.00278) [[Code]](https://github.com/thuml/Time-Series-Library/blob/main/models/KANAD.py)
   - [x] **MultiPatchFormer** - A multiscale model for multivariate time series forecasting [[Scientific Reports 2025]](https://www.nature.com/articles/s41598-024-82417-4) [[Code]](https://github.com/thuml/Time-Series-Library/blob/main/models/MultiPatchFormer.py)
@@ -110,11 +113,19 @@ You can obtain the well-preprocessed datasets from [[Google Drive]](https://driv
    ```
 
 3. Install Core Dependencies
+   > ⚠️ **CUDA Compatibility Notice**
+   > The torch prebuilt package is **CUDA-version specific**. (See https://pytorch.org/get-started/previous-versions/)
+   > Please make sure to install the package that matches your local CUDA version (e.g., `cu118` or `cu121`).
+   > Recommended: torch==2.5.1
+
    ```bash
+   pip install torch==2.5.1 --index-url https://download.pytorch.org/whl/cu121
+
    pip install -r requirements.txt
    ```
 
 4. Install Dependencies for Mamba Model (Required for Time-Series-Library/models/Mamba.py)
+   > ⚠️ **Linux only**
    > ⚠️ **CUDA Compatibility Notice**
    > The prebuilt Mamba wheel is **CUDA-version specific**.
    > Please make sure to install the wheel that matches your local CUDA version
@@ -196,6 +207,8 @@ python -u run.py --task_name classification --is_training 1 --root_path ./datase
 
 We provide the experiment scripts for all benchmarks under the folder `./scripts/`. You can reproduce the experiment results as the following examples:
 
+> ⚠️ Some scripts have `CUDA_VISIBLE_DEVICES` set by default. Please modify or remove this setting according to your actual GPU configuration, otherwise it may prevent GPU usage.
+
 ```bash
 # long-term forecast
 bash ./scripts/long_term_forecast/ETT_script/TimesNet_ETTh1.sh
@@ -211,7 +224,6 @@ bash ./scripts/classification/TimesNet.sh
 
 ### Develop Your Own Model
 - Add the model file to the folder `./models`. You can follow the `./models/Transformer.py`.
-- Include the newly added model in the `Exp_Basic.model_dict` of  `./exp/exp_basic.py`.
 - Create the corresponding scripts under the folder `./scripts`.
 
 ### Note: 
