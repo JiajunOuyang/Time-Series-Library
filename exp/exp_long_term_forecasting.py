@@ -31,7 +31,9 @@ class Exp_Long_Term_Forecast(Exp_Basic):
         return data_set, data_loader
 
     def _select_optimizer(self):
-        model_optim = optim.Adam(self.model.parameters(), lr=self.args.learning_rate)
+        # model_optim = optim.Adam(self.model.parameters(), lr=self.args.learning_rate)
+        # MuST, ProSTA
+        model_optim = optim.Adam(self.model.parameters(), lr=self.args.learning_rate, weight_decay=1e-4) # 增加 weight_decay
         return model_optim
 
     def _select_criterion(self):
@@ -135,6 +137,18 @@ class Exp_Long_Term_Forecast(Exp_Basic):
                     speed = (time.time() - time_now) / iter_count
                     left_time = speed * ((self.args.train_epochs - epoch) * train_steps - i)
                     print('\tspeed: {:.4f}s/iter; left time: {:.4f}s'.format(speed, left_time))
+
+                    # # ==========================================================
+                    # # 新增：打印 MuST 模型的门控参数 sigma (经过 sigmoid)
+                    # # 兼容可能存在的 DataParallel 包装
+                    # real_model = self.model.module if hasattr(self.model, 'module') else self.model
+                    # # 确保当前跑的是带有 stffms 的 MuST 模型
+                    # if hasattr(real_model, 'stffms'):
+                    #     # 提取四个尺度的门控值并保留四位小数
+                    #     gates = [f"{torch.sigmoid(stffm.sigma).item():.4f}" for stffm in real_model.stffms]
+                    #     print(f"\t[MuST Gates] scales {real_model.scales}: {gates}")
+                    # # ==========================================================
+
                     iter_count = 0
                     time_now = time.time()
 

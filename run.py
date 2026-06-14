@@ -157,6 +157,15 @@ if __name__ == '__main__':
     parser.add_argument('--top_p', type=float, default=0.5, help='Dynamic Routing in MoE')
     parser.add_argument('--pos', type=int, choices=[0, 1], default=1, help='Positional Embedding. Set pos to 0 or 1')
 
+    # MuST
+    parser.add_argument('--scales', type=int, nargs='+', default=[168, 24, 12, 6], help='Multi-scales for MuST model')
+
+    # ProSTA
+    parser.add_argument('--st_dim', type=int, default=256, help='dimension of spatiotemporal features (D)')
+    parser.add_argument('--local_window', type=int, default=24, help='local window size for DWC-TA (w)')
+    # parser.add_argument('--top_k', type=int, default=5, help='top k similar prototypes in PPDM')
+    # parser.add_argument('--alpha', type=float, default=0.6, help='prototype deduplication threshold')
+
     args = parser.parse_args()
     if torch.cuda.is_available() and args.use_gpu:
         args.device = torch.device('cuda:{}'.format(args.gpu))
