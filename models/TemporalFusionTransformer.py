@@ -25,7 +25,8 @@ def get_known_len(embed_type, freq):
             return 4
     else:
         freq_map = {'h': 4, 't': 5, 's': 6,
-                    'm': 1, 'a': 1, 'w': 2, 'd': 3, 'b': 3}
+                    'm': 1, 'a': 1, 'w': 2, 'd': 3, 'b': 3,
+                    '15min': 5, '30min': 5, '4h': 4, '2h': 4}
         return freq_map[freq]
 
 

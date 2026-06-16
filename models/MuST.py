@@ -16,6 +16,7 @@ class MDAM(nn.Module):
         
         self.L_K = seq_len // self.c_K
         self.S_K = pred_len // self.c_K
+        self.pred_len = pred_len
         
         # 统计特征预测子模块 (SFP)
         self.time_proj_mu = nn.Linear(self.L_K, self.S_K)
@@ -219,8 +220,8 @@ class Model(nn.Module):
         for idx, c_k in enumerate(self.scales):
             Y_norm_k = self.stffms[idx](x_norm_dict[c_k])
             
-            mu_expand = F.interpolate(pred_mu_dict[c_k].transpose(1, 2), scale_factor=c_k, mode='nearest').transpose(1, 2)
-            sigma_expand = F.interpolate(pred_sigma_dict[c_k].transpose(1, 2), scale_factor=c_k, mode='nearest').transpose(1, 2)
+            mu_expand = F.interpolate(pred_mu_dict[c_k].transpose(1, 2), size=self.pred_len, mode='linear').transpose(1, 2)
+            sigma_expand = F.interpolate(pred_sigma_dict[c_k].transpose(1, 2), size=self.pred_len, mode='linear').transpose(1, 2)
             
             Y_preds.append(Y_norm_k * sigma_expand + mu_expand)
             

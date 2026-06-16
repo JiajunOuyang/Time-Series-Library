@@ -15,7 +15,9 @@ data_dict = {
     'SMAP': SMAPSegLoader,
     'SMD': SMDSegLoader,
     'SWAT': SWATSegLoader,
-    'UEA': UEAloader
+    'UEA': UEAloader,
+    'WindPower_baseline': Dataset_Custom,
+    'WindPower_main': Dataset_Custom,
 }
 
 
